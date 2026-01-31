@@ -1,0 +1,11 @@
+{
+    "Kali": {
+        "properties": {
+            "health": 10,
+            "fatigue": 5,
+            "sleep": 5,
+            "experience": 0,
+            "save_date": "01/30/2026, 17:40:13"
+        }
+    }
+}
