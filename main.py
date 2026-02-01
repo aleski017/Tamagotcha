@@ -1,15 +1,8 @@
 import curses
-import time
-from pathlib import Path
 from tamagotchi import Pet
 from utils.game_utils import *
 from utils.ui_utils import handle_resize
 from configs import *
-
-#CHECK -----------
-#MODULARITY (packages)
-#DANDER METHODS
-#When resizing, termianl glitches
 
     
 # ------------------- MAIN GAME LOOP ------------------- #

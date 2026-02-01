@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
+import random as rnd
 
 
 class Pet:
@@ -17,9 +18,11 @@ class Pet:
     
     def __init__(self, name: str):
         self.name = name
-        self.health = 10
-        self.fatigue = 5
-        self.sleepy = 5
+        # Pet is born with some random IV (Initial Values)
+        self.health = rnd.randint(5, 15)
+        self.fatigue = rnd.randint(0, 5) 
+        self.sleepy = rnd.randint(0, 5)
+
         self.experience = 0
         self.resting = False
         self.alive = True
@@ -62,6 +65,7 @@ class Pet:
                     'fatigue': self.fatigue,
                     'sleep': self.sleepy,
                     'experience': self.experience,
+                    'resting': self.resting,
                     'save_date': now
                 }
             }
@@ -93,13 +97,39 @@ class Pet:
                 last_save = datetime.strptime(save_date_str, "%m/%d/%Y, %H:%M:%S")
                                                                     #second per hour
                 hours_elapsed = (datetime.now() - last_save).total_seconds() / 3600
+                
+                # DOES NOT WORK - WIP
+                # If saved when resting then pet recovers
+                #if props.get('resting', 0):
+                #    self.apply_rest_recovery(hours_elapsed)
+                #else: self.apply_time_degradation(hours_elapsed)
                 self.apply_time_degradation(hours_elapsed)
             
-            print(f"Loaded state for {self.name}: health={self.health}, fatigue={self.fatigue}, sleep={self.sleepy}")
+            print(f"Loaded state for {self.name}: health={self.health}, fatigue={self.fatigue}, sleep={self.sleepy}, resting = {self.resting}")
             
         except (json.JSONDecodeError, KeyError, ValueError) as e:
             print(f"Error loading save file: {e}. Starting fresh.")
-    
+
+# WIP - Does not work   
+#    def apply_rest_recovery(self, hours_elapsed):
+#        """
+#        Apply recovery while pet is resting (even when game is closed).
+#        - Fatigue decreases
+#        - Sleepiness decreases
+#        - Experience stays the same (no decay while resting)
+#        """
+#
+#        seconds_elapsed = hours_elapsed * 3600
+#        
+#        fatigue_decrease = self.REST_FATIGUE_RATE * seconds_elapsed
+#        self.fatigue = max(0, self.fatigue - fatigue_decrease)
+#        
+#        sleep_decrease = self.REST_SLEEP_RATE * seconds_elapsed
+#        self.sleepy = max(0, self.sleepy - sleep_decrease)
+#        
+#        print(f"Rest recovery: -{fatigue_decrease:.2f} fatigue, -{sleep_decrease:.2f} sleepiness")
+
+
     def apply_time_degradation(self, hours_elapsed):
         """
         Apply time-based changes to pet properties.
@@ -107,6 +137,7 @@ class Pet:
         - Experience decays slightly
         - Sleepiness increases
         """
+
         fatigue_increase = min(hours_elapsed * self.FATIGUE_PER_HOUR, self.MAX_STAT - self.fatigue)
         self.fatigue += fatigue_increase
         
@@ -121,7 +152,7 @@ class Pet:
             health_decay = hours_elapsed * self.HEALTH_DECAY_PER_HOUR
             self.health = max(0.1, self.health - health_decay)
         
-        print(f"  Time effects: +{fatigue_increase:.2f} fatigue, -{exp_decay:.2f} XP, +{sleep_increase:.2f} sleep")
+        print(f"Time effects: +{fatigue_increase:.2f} fatigue, -{exp_decay:.2f} XP, +{sleep_increase:.2f} sleep")
     
     def update(self):
         """Update pet state based on elapsed time since last rest check."""

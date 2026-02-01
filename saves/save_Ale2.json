@@ -1,0 +1,12 @@
+{
+    "Ale2": {
+        "properties": {
+            "health": 11,
+            "fatigue": 0,
+            "sleep": 0,
+            "experience": 0,
+            "resting": false,
+            "save_date": "02/01/2026, 12:23:40"
+        }
+    }
+}
