@@ -1,0 +1,12 @@
+{
+    "Ozan": {
+        "properties": {
+            "health": 6,
+            "fatigue": 2,
+            "sleep": 0,
+            "experience": 0,
+            "resting": false,
+            "save_date": "02/01/2026, 13:57:22"
+        }
+    }
+}

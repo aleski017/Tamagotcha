@@ -1,9 +1,8 @@
+# games/game.py
 import threading
 import time
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import curses
-from animation.animation import Animation
-# games/game_state.py
 from enum import Enum
 
 class GameState(Enum):
@@ -23,16 +22,12 @@ class GameLogic:
         self.state = GameState.PLAYING
     
     def update(self):
-        if self.state != GameState.PLAYING:  # Check state instead of flags
+        if self.state != GameState.PLAYING: 
             return
 
 
 class Game: 
     def __init__(self, window):
-        """
-        Create game thread
-        :param window: Subwindow displaying game
-        """
         self.window = window
         self.stop_event = threading.Event()
         self.thread = None
@@ -99,10 +94,9 @@ class Game:
         if not isinstance(key, int):
             return None
         
-        # Convert WASD if needed (subclasses can override)
+        # Convert WASD if needed 
         key = self._convert_wasd_to_arrow(key)
         
-        # Try game-specific controls first (movement, shooting, etc.)
         if self.handle_key(key):
             return None
         

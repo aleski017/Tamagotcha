@@ -1,0 +1,22 @@
+{
+  "layout": {
+    "top_margin": 3,
+    "pet": {
+      "height": 20,
+      "width": 80
+    },
+    "history": {
+      "height": 5
+    },
+    "input": {
+      "height": 1
+    },
+    "status": {
+      "height": 15,
+      "width_ratio": 0
+    },
+    "legend": {
+      "height": 10
+    }
+  }
+}

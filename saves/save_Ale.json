@@ -1,12 +1,12 @@
 {
     "Ale": {
         "properties": {
-            "health": 12,
+            "health": 7,
             "fatigue": 5,
-            "sleep": 3,
+            "sleep": 5,
             "experience": 0,
             "resting": false,
-            "save_date": "02/01/2026, 12:22:32"
+            "save_date": "02/01/2026, 13:47:59"
         }
     }
 }

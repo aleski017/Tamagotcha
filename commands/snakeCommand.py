@@ -1,4 +1,4 @@
-# commands/snake.py
+# commands/snakeCommand.py
 from .command import Command
 from games.snake_game import SnakeGame
 

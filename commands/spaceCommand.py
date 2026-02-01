@@ -1,4 +1,4 @@
-# commands/snake.py
+# commands/spaceCommand.py
 from .command import Command
 from games.space_invaders_game import MiniSpaceInvadersGame
 

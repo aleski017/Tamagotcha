@@ -6,7 +6,7 @@ from pathlib import Path
 from tamagotchi import Pet
 from commands import execute_command, COMMANDS
 from games.game import Game
-from utils.ui_utils import *
+from .ui_utils import *
 
 # Change this to update the game's difficulty! 
 SLEEP_THRESHOLD = 20 

@@ -1,8 +1,6 @@
 import curses
 import random
 from collections import deque
-from enum import Enum
-from animation.animation import Animation
 from .game import Game, GameState, GameLogic
 
 class Snake(GameLogic):
@@ -56,7 +54,7 @@ class Snake(GameLogic):
             self.state = GameState.GAME_OVER
             return
 
-        # Move snake
+        # Move 
         self.snake.appendleft(new_head)
 
         if new_head == self.food:

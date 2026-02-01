@@ -1,10 +1,9 @@
+#!/usr/bin/env python3
 import curses
 from tamagotchi import Pet
-from utils.game_utils import *
-from utils.ui_utils import handle_resize
 from configs import *
+from utils import TerminalState, handle_resize, run_game_loop, get_pet_name
 
-    
 # ------------------- MAIN GAME LOOP ------------------- #
 def main(stdscr, pet):
     curses.curs_set(0)

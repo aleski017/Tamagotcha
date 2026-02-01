@@ -1,8 +1,8 @@
-# commands/fire.py
+# commands/sleepCommand.py
 from .command import Command
 import os
 import curses
-
+from configs.config_loader import config
 
 class DeadCommand(Command):
     def __init__(self):
@@ -18,7 +18,7 @@ class DeadCommand(Command):
         }
     
     def execute(self, window, pet):
+        
         os.remove(pet.save_path)
         pet.delete_save()
-
-        return self._animate(window, self.init_colors())
+        return self._animate(window, config.get_command_colors(self.name))

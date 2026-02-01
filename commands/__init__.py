@@ -7,8 +7,6 @@ from .spaceCommand import SpaceCommand
 from .quitCommand import QuitCommand
 from .deadCommand import DeadCommand
 
-
-
 COMMANDS = {
     "kill": DeadCommand(),
     "idle": IdleCommand(),

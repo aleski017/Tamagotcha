@@ -1,4 +1,4 @@
-# commands/fire.py
+# commands/quitCommand.py
 from .command import Command
 
 class QuitCommand(Command):

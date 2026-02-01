@@ -1,11 +1,7 @@
 import curses
 import time
 import random
-from enum import Enum
 from .game import Game, GameState, GameLogic
-from animation.animation import Animation
-
-
     
 class MiniSpaceInvaders(GameLogic):
     def __init__(self, height=20, width=40):
