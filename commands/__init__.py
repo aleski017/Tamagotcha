@@ -1,7 +1,4 @@
 # commands/__init__.py
-#from .feed import feed
-#from .play import play
-#from sleepCommand import SleepCommand
 from .fireCommand import FireCommand
 from .snakeCommand import SnakeCommand
 from .sleepCommand import SleepCommand
@@ -21,3 +18,9 @@ COMMANDS = {
     "fire": FireCommand(),
     "quit": QuitCommand()
 }
+
+def execute_command(name, state, window = 'pet'):
+    if state.anim:
+        state.anim.stop()
+    state.pet.awake()
+    return COMMANDS[name].execute(state.windows[window], state.pet)

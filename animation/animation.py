@@ -65,4 +65,4 @@ class Animation:
             self.window.noutrefresh()  # Changed from refresh()
             curses.doupdate()  
             frame_index = (frame_index + 1) % len(self.frames)
-            time.sleep(0.2)
+            time.sleep(frame_delay)

@@ -2,6 +2,26 @@
 Tamagotcha is open-source CLI game simulating the portable tamagotchi game popular in the 90s. This version features save states, 4 animation-cycles and 2 playable retro games renditioned on CLI.
 
 ## Usage
+
+This project runs in a terminal using a `curses`-based interface.
+
+### Requirements
+
+#### Unix-based systems (Linux / macOS)
+
+O Unix-based systems, `curses` is available by default and no additional packages are required.
+
+```bash
+python3 --version
+python3 main.py
+```
+- A terminal window of at least **80×15**
+- Keyboard input enabled
+
+> **Windows users:** Python 3.13+ is not supported due to `curses` limitations.
+
+---
+
 Upon running, insert the desired pet's name, may it be already existing or a new one.
 
 ---

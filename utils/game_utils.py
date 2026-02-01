@@ -4,8 +4,13 @@ from dataclasses import dataclass
 from typing import Any
 from pathlib import Path
 from tamagotchi import Pet
-from commands import COMMANDS
+from commands import execute_command, COMMANDS
 from games.game import Game
+from utils.ui_utils import *
+
+SLEEP_THRESHOLD = 20
+GAME_SLEEPY_INCREASE = 5
+GAME_FATIGUE_INCREASE = 5
 
 @dataclass
 class TerminalState:
@@ -14,16 +19,15 @@ class TerminalState:
     cmd: str
     windows: dict
     too_small: bool
+    history: list
     running: bool = True
-
 
 # ------------------- STATE HANDLERS ------------------- #
 def handle_death(state: TerminalState):
     """Checks if pet is dead and triggers death animation"""
     if state.pet.death_condition or state.cmd == "kill":
-        state.anim.stop()
         state.pet.alive = False
-        state.anim = COMMANDS["kill"].execute(state.windows["pet"], state.pet)
+        state.anim = execute_command("kill", state)
         time.sleep(2)
         state.running = False
         return True
@@ -31,39 +35,32 @@ def handle_death(state: TerminalState):
 
 def handle_sleep(state: TerminalState):
     """Triggers sleep animation if pet is too sleepy"""
-    if state.pet.sleepy >= 20:
-        state.anim.stop()
-        state.pet.awake()
-        state.anim = COMMANDS["sleep"].execute(state.windows["pet"], state.pet)
+    if state.pet.sleepy >= SLEEP_THRESHOLD:
+        state.anim = execute_command("sleep", state)
         return True
     return False
 
-def handle_game_input(state, key):
+def handle_game_input(state: TerminalState, key):
+    """
+    Separates sub-gameplay input with command execution
+    """
     if isinstance(state.anim, Game):
         result = state.anim.handle_game_input(key, state.windows["pet"], state.pet)
         if result:
             state.pet.experience += state.anim.stop() 
-            state.pet.sleepy += 5
-            state.pet.fatigue += 5
-            state.anim = COMMANDS['idle'].execute(state.windows["pet"], state.pet)
+            state.pet.sleepy += GAME_SLEEPY_INCREASE
+            state.pet.fatigue += GAME_FATIGUE_INCREASE
+            state.anim = execute_command("idle", state)
             return True
     return False
 
-def execute_command(state: TerminalState):
+def handle_command(state: TerminalState):
     """Executes a valid command"""
     if state.cmd in COMMANDS:
-        state.anim.stop()
-        state.pet.awake()
-        state.anim = COMMANDS[state.cmd].execute(state.windows["pet"], state.pet)
+        state.anim = execute_command(state.cmd, state)
         if COMMANDS[state.cmd].name in ["quit", "kill"]:
             state.running = False
 
-def welcome_animation(state: TerminalState):
-    """Executes welcome animation and back to idle"""
-    state.anim = COMMANDS["fire"].execute(state.windows["pet"], state.pet)
-    time.sleep(3)
-    state.anim.stop()
-    state.anim = COMMANDS["idle"].execute(state.windows["pet"], state.pet)
 
 def draw_legend(win):
     """Displays available commands"""
@@ -75,10 +72,62 @@ def draw_legend(win):
             win.addstr(i, 2, f"- {cmd}: {COMMANDS[cmd].description}")
     win.noutrefresh()
 
+def run_game_loop(state: TerminalState, stdscr):
+    welcome_animation(state)
+    while state.running:
+        # --- INPUT ---
+        handle_input_window(state.windows['input'], state.cmd, state.max_x)
+        key = read_key(stdscr, state.windows['input'], state.cmd, state.anim)
+
+        # --- HANDLE RESIZE FIRST ---
+        if key == curses.KEY_RESIZE: handle_resize(stdscr, state)
+
+        if handle_sleep(state) or handle_game_input(state, key):
+            continue
+
+        if key == "\n":
+            if handle_death(state): break
+            handle_command(state)
+            if state.cmd:
+                handle_history(
+                    state.cmd,
+                    state.history,
+                    state.windows,
+                    state.max_x
+                )
+            state.cmd = ""
+            
+        elif key == "\x7f": # Delete char
+            state.cmd = state.cmd[:-1]
+
+        elif isinstance(key, str) and key.isprintable():
+            state.cmd += key
+    
+        # --- RENDER (SAFE) ---
+        try:
+            display_pet(state.windows["status"], state.pet)
+            draw_legend(state.windows["legend"])
+            curses.doupdate()
+        except curses.error:
+            pass
+
+        state.pet.update()
+        time.sleep(0.01)
+    return state
+
+def welcome_animation(state: TerminalState):
+    """Executes welcome animation and back to idle"""
+    state.anim = execute_command("fire", state)
+    time.sleep(3)
+    state.anim.stop()
+    state.anim = execute_command("idle", state)
 
 
 # ------------------- PET SELECTION ------------------- #
 def get_pet_name():
+    """
+    Prompts user to name instance of pet
+    """
     print("=" * 40)
     print("Welcome to Tamagotchi!")
     print("=" * 40)
