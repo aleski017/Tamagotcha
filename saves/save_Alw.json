@@ -1,0 +1,12 @@
+{
+    "Alw": {
+        "properties": {
+            "health": 11,
+            "fatigue": 3,
+            "sleep": 1,
+            "experience": 0,
+            "resting": false,
+            "save_date": "02/10/2026, 14:08:41"
+        }
+    }
+}
